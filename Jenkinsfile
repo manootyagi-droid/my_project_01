@@ -4,19 +4,30 @@ pipeline {
     stages {
         stage('Pull Code') {
             steps {
-                git url: 'file:///opt/git/myproject.git', branch: 'master'
+                script {
+                    // Use a workspace clone to avoid local checkout security warning
+                    sh '''
+                        rm -rf my_project
+                        git clone /opt/git/myproject.git my_project
+                        cd my_project
+                    '''
+                }
             }
         }
 
         stage('Build Docker') {
             steps {
-                sh 'docker-compose build'
+                dir('my_project') {
+                    sh 'docker-compose build'
+                }
             }
         }
 
         stage('Deploy Docker') {
             steps {
-                sh 'docker-compose up -d'
+                dir('my_project') {
+                    sh 'docker-compose up -d'
+                }
             }
         }
     }
