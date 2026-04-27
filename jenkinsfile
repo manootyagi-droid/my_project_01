@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Pull Code') {
+            steps {
+                // Check if the repository already exists; if so, pull the latest changes.
+                script {
+                    if (fileExists('my_project_01')) {
+                        sh 'cd my_project_01 && git pull'
+                    } else {
+                        sh 'git clone https://github.com/manootyagi-droid/my_project_01.git'
+                    }
+                }
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                // Navigate into the my_project_01 directory to run docker-compose build
+                dir('my_project_01') {
+                    sh 'docker-compose build'
+                }
+            }
+        }
+
+        stage('Deploy Docker') {
+            steps {
+                // Navigate into the my_project_01 directory to run docker-compose up
+                dir('my_project_01') {
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+    }
+}
+
+        
