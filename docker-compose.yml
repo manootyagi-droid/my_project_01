@@ -4,6 +4,3 @@ services:
     image: myapp:latest
     ports: 
       - "5000:5000"
-    volumes:
-      - .:/app
-    command: python main.py
