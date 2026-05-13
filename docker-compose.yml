@@ -6,8 +6,8 @@ services:
       - "5000:5000"
 
 
-nginx:
-build: ./nginx
+  nginx:
+    build: ./nginx
     ports:
       - "8081:80"     
     depends_on:
